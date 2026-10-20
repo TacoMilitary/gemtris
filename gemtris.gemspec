@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.author = 'TacoMilitary'
   gem.email = 'tacobuddy18@outlook.com'
-  gem.homepage = 'fakehomepage'
+  gem.homepage = 'https://github.com/TacoMilitary/gemtris'
 
   gem.files = Dir['lib/**/*.rb'] + Dir['yml/*.yml']
   gem.executable = 'gemtris'
