@@ -1,9 +1,12 @@
+# frozen_string_literal: false
+
 require 'yaml'
 
+# Comand-Line Utilities
 module CLI
-  DEFAULT_PROMPT = 'Please enter text:'
-  DEFAULT_ERROR = 'Unknown error!'
-  SCREEN_DIVIDER = "\n------------------------\n\n"
+  DEFAULT_PROMPT = 'Please enter text:'.freeze
+  DEFAULT_ERROR = 'Unknown error!'.freeze
+  SCREEN_DIVIDER = "\n------------------------\n\n".freeze
 
   def self.divide_screen
     print SCREEN_DIVIDER
@@ -14,7 +17,7 @@ module CLI
   end
 
   def self.user_input
-    print "> "
+    print '> '
     gets.chomp.strip.downcase
   end
 
@@ -31,8 +34,9 @@ module CLI
   end
 end
 
-module TetrisText
-  TEXTS = YAML.load_file('tetris.yml')
+# Provides an interface for developers to access the related YAML texts.
+module GemtrisText
+  TEXTS = YAML.load_file('gemtris.yml')
 
   def self.[](key)
     TEXTS[key.to_s]

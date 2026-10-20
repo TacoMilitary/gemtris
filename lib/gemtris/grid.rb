@@ -1,57 +1,11 @@
-class Cell
-  CELL_VISUAL_SIZE = 3
-  EMPTY_CELL_VISUAL = '-'
-  FILLED_CELL_VISUAL = '[ ]'
-  CENTER_CELL_VISUAL = '[+]'
-  SHADOW_CELL_VISUAL = '( )'
-  SOLID_CELL_VISUAL = '[=]'
+# frozen_string_literal: false
 
-  attr_reader :solid
+require_relative 'cell'
 
-  def initialize
-    clear
-  end
-
-  def to_s
-    visual.center CELL_VISUAL_SIZE
-  end
-
-  def clear
-    self.solid = false
-    self.visual = EMPTY_CELL_VISUAL
-  end
-
-  def shape_fill
-    self.visual = FILLED_CELL_VISUAL
-  end
-
-  def shape_center_fill
-    self.visual = CENTER_CELL_VISUAL
-  end
-
-  def shade
-    self.visual = SHADOW_CELL_VISUAL
-  end
-
-  def solidify
-    self.solid = true
-    self.visual = SOLID_CELL_VISUAL
-  end
-
-  def solid?
-    @solid
-  end
-
-  private
-
-  attr_writer :solid
-
-  attr_accessor :visual
-end
-
+# Simulates the coordinate grid.
 class Grid
-  GRID_BORDER_VERT = '||'
-  GRID_BORDER_HORIZ = '='
+  GRID_BORDER_VERT = '||'.freeze
+  GRID_BORDER_HORIZ = '='.freeze
   GRID_DEFAULT_WIDTH = 10
   GRID_DEFAULT_HEIGHT = 20
 
@@ -118,7 +72,7 @@ class Grid
 
   def clear_row!(row_y_value)
     row = coordinate[row_y_value]
-    row.values.each(&:clear)
+    row.each_value(&:clear)
   end
 
   def deep_clear_row!(row_y_value)
@@ -205,7 +159,7 @@ class Grid
   end
 
   def init_coordinate
-    coordinate = Hash.new
+    coordinate = {}
     (1..height).each do |y|
       coordinate[y] = init_row_columns
     end

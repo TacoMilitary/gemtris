@@ -1,72 +1,22 @@
-require_relative 'tetris_utils'
-require_relative 'grid_behavior'
-require_relative 'shape_behavior'
+# frozen_string_literal: false
 
-# rubocop:disable Style/OneClassPerFile
+ASSETS_PATH = 'gemtris/'.freeze
 
-class Player
-  ACTION_PROMPT = TetrisText[:tetromino_control_prompt]
-  INVALID_ACTION = 'That is not a valid action!'
+# require_relative "#{ASSETS_PATH}/utils"
+# require_relative "#{ASSETS_PATH}/grid_behavior"
+# require_relative "#{ASSETS_PATH}/shape_behavior"
+# require_relative "#{ASSETS_PATH}/player"
 
-  FALL_ACTION = :fall
-  MOVE_LEFT_ACTION = :move_left
-  MOVE_RIGHT_ACTION = :move_right
-  ROTATE_CLOCKWISE_ACTION = :rotate_clockwise
-  ROTATE_COUNTER_ACTION = :rotate_counter_clockwise
-  FREEFALL_ACTION = :freefall
+Dir.foreach(ASSETS_PATH) { |file| require_relative "#{ASSETS_PATH}#{file}" }
 
-  PLAY_AGAIN_CHOICE = 'yes'
+# The orchestator of gameplay.
+class GemtrisGame
+  TITLE_PLATE = '] GEMTRIS ['.freeze
+  TITLE_DECOR = '-'.freeze
 
-  INPUTS_FOR_ACTIONS = {
-    ['<', ','] => MOVE_LEFT_ACTION,
-    ['>', '.'] => MOVE_RIGHT_ACTION,
-    ['a'] => ROTATE_CLOCKWISE_ACTION,
-    ['d'] => ROTATE_COUNTER_ACTION,
-    ['s'] => FREEFALL_ACTION
-  }.freeze
-
-  def prompt_tetromino_action
-    puts ACTION_PROMPT
-    CLI.divide_screen
-
-    loop do
-      action = find_action(CLI.user_input)
-      return action if action
-
-      CLI.error(INVALID_ACTION)
-    end
-  end
-
-  def play_again?
-    answer = CLI.prompt TetrisText[:play_again]
-    answered_yes?(answer)
-  end
-
-  private
-
-  def answered_yes?(answer)
-    PLAY_AGAIN_CHOICE.start_with?(answer) ||
-      answer.start_with?(PLAY_AGAIN_CHOICE)
-  end
-
-  def find_action(player_input)
-    return FALL_ACTION if player_input.empty?
-
-    INPUTS_FOR_ACTIONS.keys.each do |input_list|
-      return INPUTS_FOR_ACTIONS[input_list] if input_list.include? player_input
-    end
-
-    nil
-  end
-end
-
-class TetrisGame
-  TITLE_PLATE = '] TETRIS ['
-  TITLE_DECOR = '-'
-
-  TUTORIAL_ANSWER = 'tutorial'
-  START_ANSWER = 'start'
-  INVALID_CHOICE = 'Invalid answer!'
+  TUTORIAL_ANSWER = 'tutorial'.freeze
+  START_ANSWER = 'start'.freeze
+  INVALID_CHOICE = 'Invalid answer!'.freeze
 
   ACTION_TIME_STEP = :step
   ACTION_DONT_STEP = :dont_step
@@ -83,12 +33,12 @@ class TetrisGame
   LEFT_DIRECTION = -1
   RIGHT_DIRECTION = 1
 
-  AFTER_TUTORIAL_TEXT = TetrisText[:after_tutorial] % START_ANSWER
+  AFTER_TUTORIAL_TEXT = GemtrisText[:after_tutorial] % START_ANSWER
 
-  LOSE_TEXT = TetrisText[:lose]
+  LOSE_TEXT = GemtrisText[:lose]
 
   TUTORIAL_TEXT = format(
-    TetrisText[:tutorial],
+    GemtrisText[:tutorial],
     Cell::EMPTY_CELL_VISUAL,
     Cell::FILLED_CELL_VISUAL,
     Cell::CENTER_CELL_VISUAL,
@@ -97,7 +47,7 @@ class TetrisGame
   )
 
   WELCOME_TEXT = format(
-    TetrisText[:welcome],
+    GemtrisText[:welcome],
     TUTORIAL_ANSWER,
     START_ANSWER
   )
@@ -160,11 +110,11 @@ class TetrisGame
   def game_sequence
     CLI.clear_screen
     reset_game
-    tetris_match_loop
+    gemtris_match_loop
     display_match_loss
   end
 
-  def tetris_match_loop
+  def gemtris_match_loop
     loop do
       spawn_result = spawn_fitting_tetromino
       break if spawn_result == FAIL_TETROMINO_SPAWN
@@ -179,7 +129,7 @@ class TetrisGame
   end
 
   def spawn_fitting_tetromino
-    randomized_shapes = TetrisShapes.all_shapes.shuffle!
+    randomized_shapes = GemtrisShapes.all_shapes.shuffle!
 
     randomized_shapes.each do |random_shape|
       self.shape = random_shape
@@ -195,9 +145,7 @@ class TetrisGame
     desired_spawns.each do |x_pos|
       shape.position[:x] = x_pos
 
-      unless grid.shape_invalid_position?(shape)
-        return SUCESSFUL_TETROMINO_SPAWN
-      end
+      return SUCESSFUL_TETROMINO_SPAWN unless grid.shape_invalid_position?(shape)
     end
 
     shape.position[:x] = desired_spawns.first
@@ -275,6 +223,7 @@ class TetrisGame
 
   def tetromino_move_x(direction_sign = RIGHT_DIRECTION)
     return ACTION_DONT_STEP unless grid.shape_move_x?(shape, direction_sign)
+
     shape.position[:x] += 1 * direction_sign
     ACTION_KILL_TETROMINO if tetromino_stop_control?
   end
@@ -366,6 +315,4 @@ class TetrisGame
   end
 end
 
-# rubocop:enable Style/OneClassPerFile
-
-TetrisGame.new.play
+GemtrisGame.new.play

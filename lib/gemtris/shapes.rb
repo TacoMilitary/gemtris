@@ -1,11 +1,16 @@
-require_relative 'grid_behavior'
+# frozen_string_literal: false
 
-module TetrisShapes
+# I don't remember if grid is needed.
+# This file might only need cell.rb
+require_relative 'grid'
+
+# An interface for general shape-related functionality.
+module GemtrisShapes
   ROTATE_CENTER = :rotate_center
   LIMB_DATA = :limb_data
 
-  FILLED_CELL_PATTERN = 'N'
-  EMPTY_CELL_PATTERN = ' '
+  FILLED_CELL_PATTERN = 'N'.freeze
+  EMPTY_CELL_PATTERN = ' '.freeze
 
   # Golomb names taken from
   # "https://quuxplusone.github.io/blog/2025/04/19/tetromino-names/"
@@ -23,7 +28,7 @@ module TetrisShapes
       { LIMB_DATA => " N\nNNN", ROTATE_CENTER => { y: 1, x: 1 } },
 
       # Straight tetromino
-      { LIMB_DATA => "NNNN", ROTATE_CENTER => { y: 0, x: 0 } },
+      { LIMB_DATA => 'NNNN', ROTATE_CENTER => { y: 0, x: 0 } },
 
       # Skrew tetromino green
       { LIMB_DATA => " NN\nNN", ROTATE_CENTER => { y: 1, x: 1 } },
@@ -47,9 +52,10 @@ module TetrisShapes
   end
 end
 
+# This is used to simulate physical shapes in the game in conjunction with the Grid class.
 class Shape
-  FILLED_CELL_PATTERN = TetrisShapes::FILLED_CELL_PATTERN
-  EMPTY_CELL_PATTERN = TetrisShapes::EMPTY_CELL_PATTERN
+  FILLED_CELL_PATTERN = GemtrisShapes::FILLED_CELL_PATTERN
+  EMPTY_CELL_PATTERN = GemtrisShapes::EMPTY_CELL_PATTERN
   EMPTY_SPACE_VISUAL = ' ' * Cell::FILLED_CELL_VISUAL.size
 
   CLOCKWISE_SIGN = 1
@@ -59,20 +65,20 @@ class Shape
   VISUAL_HASH = {
     FILLED_CELL_PATTERN => Cell::FILLED_CELL_VISUAL,
     EMPTY_CELL_PATTERN => EMPTY_SPACE_VISUAL
-  }
+  }.freeze
 
-  DEFAULT_POSITION = { y: 1, x: 1 }
+  DEFAULT_POSITION = { y: 1, x: 1 }.freeze
 
   attr_reader :visual, :limbs, :center_limb
   attr_accessor :position
 
   def initialize(shape_data)
-    limb_data = shape_data[TetrisShapes::LIMB_DATA]
+    limb_data = shape_data[GemtrisShapes::LIMB_DATA]
 
     @visual = create_visual(limb_data)
     @limbs = translate_string_to_limbs(limb_data)
     @position = DEFAULT_POSITION.dup
-    @center_limb = find_center_limb shape_data[TetrisShapes::ROTATE_CENTER]
+    @center_limb = find_center_limb shape_data[GemtrisShapes::ROTATE_CENTER]
   end
 
   def filled_coords
@@ -152,11 +158,11 @@ class Shape
     row_coords = []
     (0...row_shape_string.size).each do |substr_index|
       pattern = row_shape_string[last_matched_index..substr_index]
-      if [EMPTY_CELL_PATTERN, FILLED_CELL_PATTERN].include? pattern
-        row_coords << { y: y_coord, x: current_coord } if cell_pattern?(pattern)
-        current_coord += 1
-        last_matched_index = substr_index.next
-      end
+      next unless [EMPTY_CELL_PATTERN, FILLED_CELL_PATTERN].include? pattern
+
+      row_coords << { y: y_coord, x: current_coord } if cell_pattern?(pattern)
+      current_coord += 1
+      last_matched_index = substr_index.next
     end
     row_coords
   end
