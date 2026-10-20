@@ -4,7 +4,6 @@ require_relative 'utils'
 
 # Used to encapsulate player logic.
 class Player
-  ACTION_PROMPT = GemtrisText[:tetromino_control_prompt]
   INVALID_ACTION = 'That is not a valid action!'.freeze
 
   FALL_ACTION = :fall
@@ -19,10 +18,15 @@ class Player
   INPUTS_FOR_ACTIONS = {
     ['<', ','] => MOVE_LEFT_ACTION,
     ['>', '.'] => MOVE_RIGHT_ACTION,
-    ['a'] => ROTATE_CLOCKWISE_ACTION,
     ['d'] => ROTATE_COUNTER_ACTION,
+    ['a'] => ROTATE_CLOCKWISE_ACTION,
     ['s'] => FREEFALL_ACTION
   }.freeze
+
+  ACTION_PROMPT = format(
+    GemtrisText[:tetromino_control_prompt],
+    *INPUTS_FOR_ACTIONS.keys.flatten
+  )
 
   def prompt_tetromino_action
     puts ACTION_PROMPT

@@ -1,0 +1,23 @@
+PATH
+  remote: .
+  specs:
+    gemtris (1.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (13.4.2)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  bundler
+  gemtris!
+  rake
+
+RUBY VERSION
+   ruby 3.2.0p0
+
+BUNDLED WITH
+   2.4.1

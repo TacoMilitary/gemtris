@@ -37,7 +37,7 @@ end
 # Provides an interface for developers to access the related YAML texts.
 module GemtrisText
   # assuming yml/gemtris and we're in lib/gemtris/
-  TEXTS = Psych.load_file("#{__dir__}/../../yml/gemtris.yml")
+  TEXTS = Psych.load_file("#{__dir__}/../../yml/gemtris.yml") # Psych.load(IO.read("#{__dir__}/../../yml/gemtris.yml"))
 
   def self.[](key)
     TEXTS[key.to_s]

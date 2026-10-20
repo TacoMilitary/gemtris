@@ -49,11 +49,11 @@ after_tutorial: |
   To start, please type (%s)!
 
 tetromino_control_prompt: |
-  To Move Left:           < or ,
-  To Move Right:          > or .
-  To Rotate Clockwise:         d
-  To Rotate Counter-Clockwise: a
-  To Freefall:                 s
+  To Move Left:           %s or %s
+  To Move Right:          %s or %s
+  To Rotate Clockwise:         %s
+  To Rotate Counter-Clockwise: %s
+  To Freefall:                 %s
   
   Or input nothing to fall once.
 
