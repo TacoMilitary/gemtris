@@ -1,13 +1,18 @@
 # frozen_string_literal: false
 
-ASSETS_PATH = 'gemtris/'.freeze
+ASSETS_DIR = "gemtris/"
+
+# Load all dependencies.
+Dir.foreach("#{__dir__}/#{ASSETS_DIR}") do |file| 
+  next unless file.end_with? '.rb'
+
+  require_relative "#{ASSETS_DIR}#{file}"
+end
 
 # require_relative "#{ASSETS_PATH}/utils"
 # require_relative "#{ASSETS_PATH}/grid_behavior"
 # require_relative "#{ASSETS_PATH}/shape_behavior"
 # require_relative "#{ASSETS_PATH}/player"
-
-Dir.foreach(ASSETS_PATH) { |file| require_relative "#{ASSETS_PATH}#{file}" }
 
 # The orchestator of gameplay.
 class GemtrisGame

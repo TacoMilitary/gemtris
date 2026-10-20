@@ -1,6 +1,6 @@
 # frozen_string_literal: false
 
-require 'yaml'
+require 'psych'
 
 # Comand-Line Utilities
 module CLI
@@ -36,7 +36,8 @@ end
 
 # Provides an interface for developers to access the related YAML texts.
 module GemtrisText
-  TEXTS = YAML.load_file('gemtris.yml')
+  # assuming yml/gemtris and we're in lib/gemtris/
+  TEXTS = Psych.load_file("#{__dir__}/../../yml/gemtris.yml")
 
   def self.[](key)
     TEXTS[key.to_s]
